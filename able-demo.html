@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Elements Switchable By Mode - Proof of concept</title>
+
+  <script src="able.js"></script>
+  <script src="script.js"></script>
+
+</head>
+<body>
+
+  <div class="switchable" id="appArea" data-active="lobby">
+    
+    <div class="mode" data-appArea="lobby">
+      <div>Title</div>
+      <button onclick="appArea.switch('auth'); authArea.switch('login', 0)">
+        Login</button>
+      <button onclick="appArea.switch('auth', ()=>authArea.switch('login', 0));
+                       authArea.switch('reg', 0)">
+        Register</button>
+    </div>
+
+    <div class="mode switchable" id="authArea" data-active="login"
+        data-appArea="auth">
+      <div class="mode" data-authArea="login">Please login below</div>
+      <div class="mode" data-authArea="reg">Please register below</div>
+      <div>
+        <div class="mode" data-authArea="login">Forgot your password?</div>
+        <div class="mode" data-authArea="reg">Type your password twice!</div>
+      </div>
+      <button onclick="appArea.switch('inside')">
+        <span class="mode" data-authArea="login">Log in</span>
+        <span class="mode" data-authArea="reg">Register</span>
+      </button>
+    </div>
+
+    <div class="mode" data-appArea="inside">
+      Your are inside now
+      <div class="renderable" data-src="people">
+        <div>
+          <b>{name.first} {name.last} {age}({name.first[0]}.{name.last[0]}.)</b>:
+          <i>{age}/{height}</i>
+        </div>
+      </div>
+      <hr>
+      <div class="renderable" data-src="dictionary">
+        <div> <span>{i}.</span> <b>{key}</b>: <i>{val}</i> </div>
+      </div>
+    </div>
+
+  </div>
+  <button onclick="app.back()">back</button>
+
+</body>
+</html>
