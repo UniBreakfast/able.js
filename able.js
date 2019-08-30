@@ -6,6 +6,7 @@ addEventListener('load', () => {
 
   document.querySelectorAll('.switchable').forEach(area =>
     (area.switch = (mode, backable=1) => {
+      event.preventDefault()
       area.querySelectorAll('.mode').forEach(el => {
         const id = area.id.toLowerCase()
         if (!el.dataset[id]) return
