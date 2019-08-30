@@ -6,7 +6,6 @@ addEventListener('load', () => {
 
   document.querySelectorAll('.switchable').forEach(area =>
     (area.switch = (mode, backable=1) => {
-      event.preventDefault()
       area.querySelectorAll('.mode').forEach(el => {
         const id = area.id.toLowerCase()
         if (!el.dataset[id]) return
@@ -14,7 +13,8 @@ addEventListener('load', () => {
         el.classList.add('active')
         if (el.render) el.render()
       })
-      if (backable) {
+      if (backable > 1) setTimeout(area.switch, backable*1000)
+      else if (backable) {
         const current = area.dataset.active
         app.backStack.push(()=> {
           area.switch(current, 0)
@@ -22,6 +22,7 @@ addEventListener('load', () => {
         })
       }
       area.dataset.active = mode
+      if (event) event.preventDefault()
     })(area.dataset.active, 0)
   )
   
@@ -56,4 +57,4 @@ addEventListener('load', () => {
 })
 
 document.head.appendChild(document.createElement('style'))
-  .innerText = '.mode:not(.active) { display: none }'
+  .innerText = '.mode:not(.active) { display: none !important }'
