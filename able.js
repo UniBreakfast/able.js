@@ -18,15 +18,12 @@ addEventListener('load', () => {
         if (el.render) el.render()
       })
       if (backable) {
-        if (backable > 1) {
-          clearTimeout(timedOnOff)
+        if (backable > 1) clearTimeout(timedOnOff),
           timedOnOff = setTimeout(()=> area.switch('', 0), backable*1000)
-        } else {
-          app.backStack.push(()=> {
-            area.switch(current, 0)
-            if (typeof backable == 'function') backable()
-          })
-        }
+        else app.backStack.push(()=> {
+          area.switch(current, 0)
+          if (typeof backable == 'function') backable()
+        })
       }
       area.dataset.active = mode
       if (event) event.preventDefault()
