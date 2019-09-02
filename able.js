@@ -7,6 +7,9 @@ addEventListener('load', () => {
   document.querySelectorAll('.switchable').forEach(area => {
     var timedOnOff
     (area.switch = (mode, backable=1) => {
+      const current = area.dataset.active
+      if (mode == current && backable == 1) return
+      
       area.querySelectorAll('.mode').forEach(el => {
         const id = area.id.toLowerCase()
         if (!el.dataset[id]) return
@@ -19,7 +22,6 @@ addEventListener('load', () => {
           clearTimeout(timedOnOff)
           timedOnOff = setTimeout(()=> area.switch('', 0), backable*1000)
         } else {
-          const current = area.dataset.active
           app.backStack.push(()=> {
             area.switch(current, 0)
             if (typeof backable == 'function') backable()
