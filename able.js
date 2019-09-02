@@ -27,13 +27,16 @@ addEventListener('load', () => {
   )
   
   document.querySelectorAll('.renderable').forEach(area => {
-    const template = area.innerHTML, srcProp = area.dataset.src,
-          source = app[srcProp],
+    const template = area.innerHTML, callbacks = [],
+          srcProp = area.dataset.src, source = app[srcProp], 
           placeholders = [...new Set(template.match(/\{.+?\}/g))]
             .reduce((dic, holder) => ({...dic, [holder]: holder
               .split(/[.{}[\]]/g).filter(v => v)}), {});
-    
-    (area.render = () => {
+
+    (area.render = callback => {
+
+      if (callback) return callbacks.push(callback)
+
       const src = Array.isArray(source)? source : 
             Object.entries(source).map(([key, val], i) => ({key, val, i: i+1})),
             placeValues = src.map(props => Object.entries(placeholders)
@@ -43,6 +46,8 @@ addEventListener('load', () => {
       area.innerHTML = placeValues.reduce((html, dic) => html + 
         Object.entries(dic).reduce((html, [holder, value]) => 
           html.split(holder).join(value), template), '')
+
+      callbacks.forEach(callback => callback())
     })()
     
     var previouslyPlanned = 0
