@@ -4,7 +4,8 @@ const app = { backStack: [],
 
 addEventListener('load', () => {
 
-  document.querySelectorAll('.switchable').forEach(area =>
+  document.querySelectorAll('.switchable').forEach(area => {
+    var timedOnOff
     (area.switch = (mode, backable=1) => {
       area.querySelectorAll('.mode').forEach(el => {
         const id = area.id.toLowerCase()
@@ -13,18 +14,22 @@ addEventListener('load', () => {
         el.classList.add('active')
         if (el.render) el.render()
       })
-      if (backable > 1) setTimeout(area.switch, backable*1000)
-      else if (backable) {
-        const current = area.dataset.active
-        app.backStack.push(()=> {
-          area.switch(current, 0)
-          if (typeof backable == 'function') backable()
-        })
+      if (backable) {
+        if (backable > 1) {
+          clearTimeout(timedOnOff)
+          timedOnOff = setTimeout(()=> area.switch('', 0), backable*1000)
+        } else {
+          const current = area.dataset.active
+          app.backStack.push(()=> {
+            area.switch(current, 0)
+            if (typeof backable == 'function') backable()
+          })
+        }
       }
       area.dataset.active = mode
       if (event) event.preventDefault()
     })(area.dataset.active, 0)
-  )
+  })
   
   document.querySelectorAll('.renderable').forEach(area => {
     const template = area.innerHTML, callbacks = [],
