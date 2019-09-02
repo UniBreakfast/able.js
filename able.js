@@ -41,8 +41,10 @@ addEventListener('load', () => {
 
       if (callback) return callbacks.push(callback)
 
-      const src = Array.isArray(source)? source : 
-            Object.entries(source).map(([key, val], i) => ({key, val, i: i+1})),
+      const src = Array.isArray(source)? 
+              source.map((obj, i) => ({...obj, i: i+1})) : 
+                Object.entries(source).map(([key, val], i) => 
+                  ({key, val, i: i+1})),
             placeValues = src.map(props => Object.entries(placeholders)
               .reduce((dic, [holder, path]) => ({...dic, [holder]: path
                 .reduce((val, prop) => val[prop], props)}), {}))
