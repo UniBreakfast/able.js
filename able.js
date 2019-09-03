@@ -1,7 +1,6 @@
-const app = { togglables: {}, backStack: [], 
-              back() { if (app.backStack.length) app.backStack.pop()() } },
-      upd = {}
-
+const upd = {}, app = { togglables: {}, zIndex: 1, backStack: [], 
+              back() { if (app.backStack.length) app.backStack.pop()() } }
+      
 addEventListener('load', () => {
 
   document.querySelectorAll('.switchable').forEach(area => {
@@ -74,10 +73,13 @@ function toggle(...names) {
     app.togglables = [...document.getElementsByClassName('togglable')]
       .reduce((reg, el) => ({...reg, [el.dataset.tgl]: el}), {})
   names.forEach(name => {
-    const elClass = app.togglables[name].classList
-    if (elClass.contains('modal') && !elClass.contains('active')) 
+    const el = app.togglables[name], elClass = el.classList
+    if (elClass.contains('modal') && !elClass.contains('active')) {
       app.backStack.push( () => elClass.contains('active')? 
         elClass.remove('active') : app.back() )
+      el.style.zIndex = app.zIndex++
+    }
     elClass.toggle('active')
   })
+
 }
