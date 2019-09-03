@@ -1,4 +1,4 @@
-const app = { backStack: [], 
+const app = { togglables: {}, backStack: [], 
               back() { if (app.backStack.length) app.backStack.pop()() } },
       upd = {}
 
@@ -42,7 +42,7 @@ addEventListener('load', () => {
       if (callback) return callbacks.push(callback)
 
       const src = Array.isArray(source)? 
-              source.map((obj, i) => ({...obj, i: i+1})) : 
+              source.map((obj, i) => ({...obj, i: obj.i || i+1})) : 
                 Object.entries(source).map(([key, val], i) => 
                   ({key, val, i: i+1})),
             placeValues = src.map(props => Object.entries(placeholders)
@@ -64,8 +64,20 @@ addEventListener('load', () => {
       (clearTimeout(previouslyPlanned), previouslyPlanned = setTimeout( () => 
         ( area.render(), otherAreaRender() ), 0 ), source) })
   })
-
 })
 
-document.head.appendChild(document.createElement('style'))
-  .innerText = '.mode:not(.active) { display: none !important }'
+document.head.appendChild(document.createElement('style')).innerText =
+  '.mode:not(.active), .togglable:not(.active) { display: none !important }'
+
+function toggle(...names) {
+  if (!names.every(name => name in app.togglables)) 
+    app.togglables = [...document.getElementsByClassName('togglable')]
+      .reduce((reg, el) => ({...reg, [el.dataset.tgl]: el}), {})
+  names.forEach(name => {
+    const elClass = app.togglables[name].classList
+    if (elClass.contains('modal') && !elClass.contains('active')) 
+      app.backStack.push( () => elClass.contains('active')? 
+        elClass.remove('active') : app.back() )
+    elClass.toggle('active')
+  })
+}

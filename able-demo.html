@@ -52,6 +52,17 @@
       </div>
     </div>
 
+    <div>
+      <button class="togglable active" data-tgl="one"
+        onclick="toggle('four','one','two')">1</button>
+      <button class="togglable" data-tgl="two"
+      onclick="toggle('one','two','three')">2</button>
+      <button class="togglable modal" data-tgl="three"
+      onclick="toggle('two','three','four')">3</button>
+      <button class="togglable modal" data-tgl="four"
+      onclick="toggle('three','four','one')">4</button>
+    </div>
+
   </div>
   <button onclick="app.back()">back</button>
 
