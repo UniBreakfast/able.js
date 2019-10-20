@@ -30,8 +30,8 @@ addEventListener('load', () => {
   })
   
   document.querySelectorAll('.renderable').forEach(area => {
-    const template = area.innerHTML, callbacks = [],
-          srcProp = area.dataset.src, source = app[srcProp], 
+    const template = area.innerHTML.replace(/^\s*<template>|<\/template>\s*$/g, ''),
+          callbacks = [], srcProp = area.dataset.src, source = app[srcProp], 
           placeholders = [...new Set(template.match(/\{.+?\}/g))]
             .reduce((dic, holder) => ({...dic, [holder]: holder
               .split(/[.{}[\]]/g).filter(v => v)}), {});
@@ -81,5 +81,4 @@ function toggle(...names) {
     }
     elClass.toggle('active')
   })
-
 }
